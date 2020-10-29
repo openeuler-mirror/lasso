@@ -1,6 +1,6 @@
 Name:                lasso
 Version:             2.6.0
-Release:             11
+Release:             12
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
@@ -16,8 +16,7 @@ BuildRequires:       libxml2-devel openssl-devel swig xmlsec1-devel >= 1.2.25-4
 BuildRequires:       xmlsec1-openssl-devel >= 1.2.25-4 zlib-devel jpackage-utils
 BuildRequires:       java-devel perl(ExtUtils::MakeMaker) perl(strict) perl(Error)
 BuildRequires:       perl-devel perl-generators perl(XSLoader) perl(warnings)
-BuildRequires:       perl(Test::More) python2-lxml python2-six
-BuildRequires:       python2 python2-devel python3 python3-devel
+BuildRequires:       perl(Test::More) python3 python3-devel
 BuildRequires:       python3-lxml python3-six libtool-ltdl-devel
 
 %description
@@ -49,17 +48,6 @@ Obsoletes:           lasso-java < %{version}-%{release}
 The package provide Java language bindings for the lasso
 (Liberty Alliance Single Sign On) library.
 
-%package -n python2-lasso
-%{?python_provide:%python_provide python2-lasso}
-Summary:             Liberty Alliance Single Sign On (lasso) Python bindings
-Requires:            python2 lasso = %{version}-%{release}
-Provides:            lasso-python = %{version}-%{release}
-Obsoletes:           lasso-python < %{version}-%{release}
-
-%description -n python2-lasso
-The package provide Python language bindings for the lasso
-(Liberty Alliance Single Sign On)library.
-
 %package -n python3-lasso
 %{?python_provide:%python_provide python3-lasso}
 Summary:             Liberty Alliance Single Sign On (lasso) Python bindings
@@ -83,17 +71,6 @@ sed -i -E -e '/^#![[:blank:]]*(\/usr\/bin\/env[[:blank:]]+python[^3]?\>) \
 
 %build
 ./autogen.sh
-%configure --enable-php5=no --with-python=%{__python2}
-cd lasso
-%make_build CFLAGS="%{optflags}"
-cd -
-cd bindings/python
-%make_build CFLAGS="%{optflags}"
-make check
-mkdir py2
-mv lasso.py .libs/_lasso.so py2
-cd -
-make clean
 %configure --enable-php5=no --with-python=%{__python3}
 %make_build CFLAGS="%{optflags}"
 
@@ -104,9 +81,6 @@ make check
 %make_install exec_prefix=%{_prefix}
 %delete_la
 find %{buildroot} -type f -name '*.a' -exec rm -f {} \;
-install -d -m 0755 %{buildroot}/%{python2_sitearch}
-install -m 0755 bindings/python/py2/_lasso.so %{buildroot}/%{python2_sitearch}
-install -m 0644 bindings/python/py2/lasso.py %{buildroot}/%{python2_sitearch}
 find %{buildroot} \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
 find %{buildroot}/usr/lib*/perl5 -type f -print |
   sed "s@^%{buildroot}@@g" > lasso-perl-filelist
@@ -132,9 +106,6 @@ fi
 %{_libdir}/java/libjnilasso.so
 %{_javadir}/lasso.jar
 
-%files -n python2-lasso
-%{python2_sitearch}/{lasso.py*,_lasso.so}
-
 %files -n python3-lasso
 %{python3_sitearch}/{lasso.py*,_lasso.so,__pycache__/*}
 
@@ -142,5 +113,8 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Wed Oct 21 2020 Ge Wang <wangge20@huawei.com> - 2.6.0-12
+- remove python2
+
 * Wed Jun 18 2020 yaokai <yaoaki13@huawei.com> - 2.6.0-11
 - package init
