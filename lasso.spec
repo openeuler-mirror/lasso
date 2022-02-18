@@ -1,6 +1,6 @@
 Name:                lasso
 Version:             2.6.0
-Release:             13
+Release:             14
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
@@ -12,6 +12,7 @@ Patch3:              duplicate-python-LogoutTestCase.patch
 patch4:              versioned-python-configure.patch
 Patch5:              0005-tests-Remove-the-use-of-an-expired-cert-in-tests-as-.patch
 Patch6000:           backport-CVE-2021-28091.patch
+Patch6001:           0001-Explicitly-define-tests-cases-and-add-them-to-tests.patch
 
 BuildRequires:       autoconf automake check-devel glib2-devel gtk-doc libtool
 BuildRequires:       libxml2-devel openssl-devel swig xmlsec1-devel >= 1.2.25-4
@@ -115,6 +116,9 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Fri Feb 18 2022 yangping <yangping69@huawei.com> - 2.6.0-14
+- fix error:initializer element is not constant
+
 * Sat Jul 10 2021 shixuantong <shixuantong@huawei.com> - 2.6.0-13
 - fix CVE-2021-28091
 
