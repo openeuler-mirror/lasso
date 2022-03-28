@@ -1,6 +1,6 @@
 Name:                lasso
 Version:             2.6.0
-Release:             13
+Release:             14
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
@@ -11,6 +11,7 @@ Patch2:              build-scripts-py3-compatible.patch
 Patch3:              duplicate-python-LogoutTestCase.patch
 patch4:              versioned-python-configure.patch
 Patch5:              0005-tests-Remove-the-use-of-an-expired-cert-in-tests-as-.patch
+Patch6:              0001-lasso-config.-add-loongarch64-support.patch
 Patch6000:           backport-CVE-2021-28091.patch
 
 BuildRequires:       autoconf automake check-devel glib2-devel gtk-doc libtool
@@ -115,6 +116,9 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Tue Nov 16 2021 shipujin <shipujin@loonson.cn> - 2.6.0-14
+- add loongarch64 support
+
 * Sat Jul 10 2021 shixuantong <shixuantong@huawei.com> - 2.6.0-13
 - fix CVE-2021-28091
 
