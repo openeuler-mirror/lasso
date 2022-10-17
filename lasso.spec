@@ -1,26 +1,22 @@
 Name:                lasso
-Version:             2.6.0
-Release:             14
+Version:             2.7.0
+Release:             1
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
 Source:              http://dev.entrouvert.org/lasso/lasso-%{version}.tar.gz
 Requires:            xmlsec1 >= 1.2.25-4
-Patch1:              use-specified-python-interpreter.patch
-Patch2:              build-scripts-py3-compatible.patch
-Patch3:              duplicate-python-LogoutTestCase.patch
-patch4:              versioned-python-configure.patch
-Patch5:              0005-tests-Remove-the-use-of-an-expired-cert-in-tests-as-.patch
-Patch6000:           backport-CVE-2021-28091.patch
-Patch6001:           0001-Explicitly-define-tests-cases-and-add-them-to-tests.patch
+Patch1:              lasso-python-dont-decref-true-false.patch
 
 BuildRequires:       autoconf automake check-devel glib2-devel gtk-doc libtool
 BuildRequires:       libxml2-devel openssl-devel swig xmlsec1-devel >= 1.2.25-4
 BuildRequires:       xmlsec1-openssl-devel >= 1.2.25-4 zlib-devel jpackage-utils
-BuildRequires:       java-devel perl(ExtUtils::MakeMaker) perl(strict) perl(Error)
+BuildRequires:       java-1.8.0-openjdk-devel perl(ExtUtils::MakeMaker) perl(strict) perl(Error)
 BuildRequires:       perl-devel perl-generators perl(XSLoader) perl(warnings)
 BuildRequires:       perl(Test::More) python3 python3-devel
 BuildRequires:       python3-lxml python3-six libtool-ltdl-devel
+
+Obsoletes:           java-lasso < %{version}-%{release}
 
 %description
 The package is a implements the Liberty Alliance Single Sign On standards library,
@@ -73,16 +69,17 @@ sed -i -E -e '/^#![[:blank:]]*(\/usr\/bin\/env[[:blank:]]+python[^3]?\>) \
 |(/usr/bin/env[[:blank:]]+python[^3]?)' *`
 
 %build
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 ./autogen.sh
 %configure --enable-php5=no --with-python=%{__python3}
 %make_build CFLAGS="%{optflags}"
 
 %check
-make check
+make check CK_TIMEOUT_MULTIPLIER=10
 
 %install
-%make_install exec_prefix=%{_prefix}
-%delete_la
+%make_install exec_prefix=%{_prefix} DESTDIR=%{buildroot}
+find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 find %{buildroot} -type f -name '*.a' -exec rm -f {} \;
 find %{buildroot} \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
 find %{buildroot}/usr/lib*/perl5 -type f -print |
@@ -106,8 +103,6 @@ fi
 %files -n perl-lasso -f lasso-perl-filelist
 
 %files -n java-lasso
-%{_libdir}/java/libjnilasso.so
-%{_javadir}/lasso.jar
 
 %files -n python3-lasso
 %{python3_sitearch}/{lasso.py*,_lasso.so,__pycache__/*}
@@ -116,6 +111,9 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Mon Oct 17 2022 wangkai <wangkai385@h-partners.com> - 2.7.0-1
+- Upgrade to 2.7.0
+
 * Fri Feb 18 2022 yangping <yangping69@huawei.com> - 2.6.0-14
 - fix error:initializer element is not constant
 
