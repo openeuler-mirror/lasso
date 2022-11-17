@@ -1,0 +1,35 @@
+From ac98cfa0e08962cbd2c8598b79e7fdeb172ed408 Mon Sep 17 00:00:00 2001
+From: Shi Pujin <shipujin@loongson.cn>
+Date: Tue, 16 Nov 2021 11:15:42 +0000
+Subject: [PATCH] lasso: config.*: add loongarch64 support
+
+
+diff --git a/config.guess b/config.guess
+index f50dcdb..e1cbc54 100755
+--- a/config.guess
++++ b/config.guess
+@@ -992,6 +992,9 @@ EOF
+     mips64el:Linux:*:*)
+ 	echo "$UNAME_MACHINE"-unknown-linux-"$LIBC"
+ 	exit ;;
++    loongarch64:Linux:*:* | loongarch32:Linux:*:*)
++        echo "$UNAME_MACHINE"-unknown-linux-"$LIBC"
++        exit ;;
+     openrisc*:Linux:*:*)
+ 	echo or1k-unknown-linux-"$LIBC"
+ 	exit ;;
+diff --git a/config.sub b/config.sub
+index 1d8e98b..a0be608 100755
+--- a/config.sub
++++ b/config.sub
+@@ -267,6 +267,7 @@ case $basic_machine in
+ 	| lm32 \
+ 	| m32c | m32r | m32rle | m68000 | m68k | m88k \
+ 	| maxq | mb | microblaze | microblazeel | mcore | mep | metag \
++	| loongarch64 | loongarch32 \
+ 	| mips | mipsbe | mipseb | mipsel | mipsle \
+ 	| mips16 \
+ 	| mips64 | mips64el \
+-- 
+2.27.0
+
