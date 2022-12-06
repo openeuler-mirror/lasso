@@ -1,6 +1,6 @@
 Name:                lasso
 Version:             2.6.0
-Release:             14
+Release:             15
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
@@ -13,6 +13,7 @@ patch4:              versioned-python-configure.patch
 Patch5:              0005-tests-Remove-the-use-of-an-expired-cert-in-tests-as-.patch
 Patch6000:           backport-CVE-2021-28091.patch
 Patch6001:           0001-Explicitly-define-tests-cases-and-add-them-to-tests.patch
+Patch6002:           0001-lasso-config.-add-loongarch64-support.patch
 
 BuildRequires:       autoconf automake check-devel glib2-devel gtk-doc libtool
 BuildRequires:       libxml2-devel openssl-devel swig xmlsec1-devel >= 1.2.25-4
@@ -67,7 +68,17 @@ Summary:             Help document for the lasso packages
 Help document for the lasso packages
 
 %prep
-%autosetup -n lasso-%{version} -p1
+%setup -q
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6000 -p1
+%patch6001 -p1
+%ifarch loongarch64
+%patch6002 -p1
+%endif
 sed -i -E -e '/^#![[:blank:]]*(\/usr\/bin\/env[[:blank:]]+python[^3]?\>) \
 |(\/usr\/bin\/python[^3]?\>)/d' `grep -r -l -E '^#![[:blank:]]*(/usr/bin/python[^3]?) \
 |(/usr/bin/env[[:blank:]]+python[^3]?)' *`
@@ -116,6 +127,9 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Thu Nov 17 2022 doupengda <doupengda@loongson.cn> - 2.6.0-15
+- add loongarch64 support
+
 * Fri Feb 18 2022 yangping <yangping69@huawei.com> - 2.6.0-14
 - fix error:initializer element is not constant
 
