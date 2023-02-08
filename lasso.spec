@@ -1,12 +1,12 @@
 Name:                lasso
-Version:             2.7.0
+Version:             2.8.0
 Release:             1
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
 Source:              http://dev.entrouvert.org/lasso/lasso-%{version}.tar.gz
 Requires:            xmlsec1 >= 1.2.25-4
-Patch1:              lasso-python-dont-decref-true-false.patch
+Patch1:              Use-OpenSSL-EVP-API-to-work-around-deprecation-of-low.patch
 
 BuildRequires:       autoconf automake check-devel glib2-devel gtk-doc libtool
 BuildRequires:       libxml2-devel openssl-devel swig xmlsec1-devel >= 1.2.25-4
@@ -111,6 +111,9 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Wed Feb 08 2023 Ge Wang <wangge20@h-partners.com> - 2.8.0-1
+- Update to version 2.8.0 fix build failure due to openssl update to version 3.0.8
+
 * Fri Apr 8 2022 yaoxin <yaoxin30@h-partners.com> - 2.7.0-1
 - Resolve compilation failures
 
