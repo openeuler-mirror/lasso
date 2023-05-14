@@ -1,6 +1,6 @@
 Name:                lasso
 Version:             2.8.0
-Release:             1
+Release:             2
 Summary:             Liberty Alliance Single Sign On
 License:             GPLv2+
 URL:                 http://lasso.entrouvert.org/
@@ -67,18 +67,25 @@ Help document for the lasso packages
 sed -i -E -e '/^#![[:blank:]]*(\/usr\/bin\/env[[:blank:]]+python[^3]?\>) \
 |(\/usr\/bin\/python[^3]?\>)/d' `grep -r -l -E '^#![[:blank:]]*(/usr/bin/python[^3]?) \
 |(/usr/bin/env[[:blank:]]+python[^3]?)' *`
+aclocal
+automake --add-missing
 
 %build
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 ./autogen.sh
 %configure --enable-php5=no --with-python=%{__python3}
-%make_build CFLAGS="%{optflags}"
+%if "%toolchain" == "clang"
+	%make_build CFLAGS="%{optflags} -Wno-int-conversion"
+%else 
+	%make_build CFLAGS="%{optflags}"
+%endif
 
 %check
 make check CK_TIMEOUT_MULTIPLIER=10
 
 %install
 %make_install exec_prefix=%{_prefix} DESTDIR=%{buildroot}
+chmod u+w %{buildroot}/usr/lib64/perl5/vendor_perl/auto/Lasso/Lasso.so
 find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 find %{buildroot} -type f -name '*.a' -exec rm -f {} \;
 find %{buildroot} \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
@@ -111,6 +118,9 @@ fi
 %doc AUTHORS NEWS README
 
 %changelog
+* Thu May 11 2023 yoo <sunyuechi@iscas.ac.cn> - 2.8.0-2
+- fix clang build error, automake version
+
 * Wed Feb 08 2023 Ge Wang <wangge20@h-partners.com> - 2.8.0-1
 - Update to version 2.8.0 fix build failure due to openssl update to version 3.0.8
 
