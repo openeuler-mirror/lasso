@@ -75,7 +75,7 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 ./autogen.sh
 %configure --enable-php5=no --with-python=%{__python3}
 %if "%toolchain" == "clang"
-	%make_build CFLAGS="%{optflags} -Wno-int-conversion"
+	%make_build CFLAGS="%{optflags} -Wno-error=int-conversion"
 %else 
 	%make_build CFLAGS="%{optflags}"
 %endif
